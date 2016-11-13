@@ -1,2 +1,2 @@
 # examples
-Various useful configuration examples
+Various code & configuration examples 
