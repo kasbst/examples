@@ -1,0 +1,30 @@
+<ehcache>
+
+	<diskStore path="java.io.tmpdir"/>
+	 <cacheManagerEventListenerFactory class="" properties=""/>
+
+	 <defaultCache
+            maxElementsInMemory="1000"
+            eternal="false"
+            timeToIdleSeconds="600"
+            timeToLiveSeconds="600"
+            overflowToDisk="false"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LFU"
+            statistics="true"
+            />
+
+	<cache name="StandardQueryCache"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="600"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="600"
+           memoryStoreEvictionPolicy="LFU"
+           statistics="true"
+            />
+
+</ehcache>

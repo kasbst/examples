@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+<!-- JAMON Performance Monitoring -->
+<appender name="perfLog" class="org.apache.log4j.FileAppender">
+              <!-- We need to have threshold TRACE both on the logger and the appender. -->
+              <param name="Threshold" value="TRACE" />
+              <param name="File" value="/opt/application/logs/performance.log"/>
+              <!-- Truncate for testing -->
+              <param name="Append" value="false"/>
+              <layout class="org.apache.log4j.PatternLayout">
+                  <param name="ConversionPattern" value="[%d{ISO8601}] - %-5p - %m %n" />
+              </layout>
+</appender>
+
+<!-- JAMON Performance Monitoring -->
+<logger name="org.springframework.aop.interceptor.JamonPerformanceMonitorInterceptor" additivity="false">
+        <level value="TRACE"/>
+        <appender-ref ref="perfLog"/>
+</logger>
+
+</log4j:configuration>

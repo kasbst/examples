@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:security="http://www.springframework.org/schema/security"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:sec="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+		<bean id="sessionFactory"
+                class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+                <property name="dataSource" ref="dataSource"></property>
+                <property name="hibernateProperties">
+                        <props>
+                                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                                <!--  This value should be false in production -->
+                                <prop key="hibernate.show_sql">false</prop>
+
+                                <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
+                                <prop key="hibernate.cache.use_query_cache">true</prop>
+                                <prop key="hibernate.cache.use_second_level_cache">true</prop> 
+                                <prop key="hibernate.cache.provider_configuration_file_resource_path">ehcache.xml</prop>
+                                <prop key="hibernate.connection.release_mode">auto</prop>
+                                <prop key="hibernate.transaction.flush_before_completion">true</prop>
+                                <prop key="hibernate.transaction.auto_close_session">false</prop>
+                           <!-- <prop key="hibernate.current_session_context_class">thread</prop> -->
+                                <prop key="hibernate.generate_statistics">true</prop>
+                        </props>
+                </property>
+                <property name="mappingLocations">
+                        <list>
+                                <value>classpath:mappings/*.hbm.xml</value>
+                        </list>
+                </property>
+        </bean>
+
+        <!-- JMX for Hibernate -->
+        <bean id="hibernateStatisticsMBean" class="org.hibernate.jmx.StatisticsService">
+            <property name="sessionFactory" ref="sessionFactory" />
+        </bean>
+
+       <!-- JMX for ehcache -->
+       <bean id="managementService"
+            class="net.sf.ehcache.management.ManagementService"
+            init-method="init"
+            destroy-method="dispose">
+
+            <constructor-arg ref="cacheManager"/>
+            <constructor-arg ref="mbeanServer"/>
+            <constructor-arg index="2" value="true"/>
+            <constructor-arg index="3" value="true"/>
+            <constructor-arg index="4" value="true"/>
+            <constructor-arg index="5" value="true"/>
+
+      </bean>
+
+      <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+           <property name="configLocation" value="classpath:ehcache.xml"/>
+           <property name="shared" value="true"/>
+      </bean>
+
+      <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
+           <property name="locateExistingServerIfPossible" value="true"/>
+      </bean>
+
+ </beans>
